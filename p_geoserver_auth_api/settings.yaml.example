@@ -1,0 +1,7 @@
+mode: development
+database:
+  db_name: postgres
+  user: postgres
+  password: postgres
+  host: localhost
+  port: 5432
