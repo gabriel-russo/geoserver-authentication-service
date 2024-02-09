@@ -16,7 +16,7 @@ def check_password(password, hash_postgresql):
 
 
 @api.get("/auth")
-def add(request, x_http_authorization=Header(alias="X-HTTP-AUTHORIZATION")):
+def auth(request, x_http_authorization=Header(alias="X-HTTP-AUTHORIZATION")):
     user, password = b64decode(x_http_authorization).decode("utf-8").split(":")
 
     try:
