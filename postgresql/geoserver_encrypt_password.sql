@@ -5,16 +5,23 @@ BEGIN
 
 	IF (passwd <> '') IS TRUE THEN
 
+		IF TG_OP = 'UPDATE' THEN
+ 			IF (OLD.password = passwd) IS TRUE THEN
+				RETURN OLD;
+			END IF;
+		END IF;
+
 		NEW.password := crypt(passwd, gen_salt('bf', 8));
-	ELSE
-		RAISE EXCEPTION 'Password string empty';
+
+		RETURN NEW;
 	END IF;
 
-	RETURN NEW;
-END; 
+	RAISE EXCEPTION 'Error on Update or Select, password is empty';
+END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tg_geoserver_encrypt_password
-	BEFORE INSERT OR UPDATE 
+	BEFORE INSERT OR UPDATE
+	OF password
 	ON geoserver.users
 FOR EACH ROW EXECUTE PROCEDURE geoserver.geoserver_encrypt_password();
